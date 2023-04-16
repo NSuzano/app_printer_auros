@@ -1,6 +1,11 @@
+import 'dart:convert';
+import 'dart:typed_data';
+
+import 'package:auros_printer/finalpage.dart';
 import 'package:bluetooth_print/bluetooth_print.dart';
 import 'package:bluetooth_print/bluetooth_print_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class PrintPage extends StatefulWidget {
   final List<Map<String, dynamic>> data;
@@ -46,7 +51,6 @@ class _PrintPageState extends State<PrintPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Selecione o dispositivo"),
-        backgroundColor: Colors.redAccent,
       ),
       body: _devices.isEmpty
           ? Center(
@@ -61,6 +65,8 @@ class _PrintPageState extends State<PrintPage> {
                   subtitle: Text("${_devices[index].address}"),
                   onTap: () {
                     _startPrint(_devices[index]);
+                    Navigator.pushReplacement(context,
+                        MaterialPageRoute(builder: (_) => FinalPage()));
                   },
                 );
               }),
@@ -72,16 +78,17 @@ class _PrintPageState extends State<PrintPage> {
       await blutoothPrint.connect(device);
 
       Map<String, dynamic> config = Map();
-
       List<LineText> list = [];
+
+      //Convertendo imagem para base 64
+      ByteData dataImage = await rootBundle.load("assets/images/arus.jpg");
+      List<int> imageBytes = dataImage.buffer
+          .asUint8List(dataImage.offsetInBytes, dataImage.lengthInBytes);
+      String base64Image = base64Encode(imageBytes);
 
       list.add(LineText(
           type: LineText.TYPE_IMAGE,
-          content:
-              'https://media.licdn.com/dms/image/C4E0BAQFggMnGBYkS7g/company-logo_200_200/0/1653325300516?e=2147483647&v=beta&t=_zLBo-tnW_HI5KVfZ-vPMSTinr3ekugliyDOViJul6U',
-          weight: 2,
-          width: 2,
-          height: 2,
+          content: base64Image,
           align: LineText.ALIGN_CENTER,
           linefeed: 1));
 
@@ -97,6 +104,13 @@ class _PrintPageState extends State<PrintPage> {
       list.add(LineText(
           type: LineText.TYPE_TEXT,
           content: widget.data[0]['nome'],
+          weight: 0,
+          align: LineText.ALIGN_LEFT,
+          linefeed: 1));
+
+      list.add(LineText(
+          type: LineText.TYPE_TEXT,
+          content: widget.data[0]['data'],
           weight: 0,
           align: LineText.ALIGN_LEFT,
           linefeed: 1));
