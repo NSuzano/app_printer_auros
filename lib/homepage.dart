@@ -39,10 +39,10 @@ class _HomePageState extends State<HomePage> {
                     padding: EdgeInsets.all(8.0),
                     child: Container(
                       decoration: BoxDecoration(
-                        border: Border.all(width: 2, color: Colors.grey),
+                        border: Border.all(),
                       ),
                       child: Image.asset(
-                        "assets/images/arus.jpg",
+                        "assets/images/aurus.jpg",
                         width: 150,
                       ),
                     ),

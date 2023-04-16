@@ -81,7 +81,7 @@ class _PrintPageState extends State<PrintPage> {
       List<LineText> list = [];
 
       //Convertendo imagem para base 64
-      ByteData dataImage = await rootBundle.load("assets/images/arus.jpg");
+      ByteData dataImage = await rootBundle.load("assets/images/aurus.jpg");
       List<int> imageBytes = dataImage.buffer
           .asUint8List(dataImage.offsetInBytes, dataImage.lengthInBytes);
       String base64Image = base64Encode(imageBytes);
