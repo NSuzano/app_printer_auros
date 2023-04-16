@@ -1,4 +1,4 @@
-# auros_printer
+# App aurus_printer
 
 A new Flutter project.
 
