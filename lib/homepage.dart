@@ -1,6 +1,9 @@
 import 'package:auros_printer/printpage.dart';
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
+import 'package:brasil_fields/brasil_fields.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -15,14 +18,14 @@ class _HomePageState extends State<HomePage> {
   final _emailController = TextEditingController();
   final _nomeController = TextEditingController();
   final _cpfController = TextEditingController();
+  final _dataController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('Arus - Printer'),
+          title: Text('Arus Blutooth Printer'),
           centerTitle: true,
-          backgroundColor: Colors.redAccent,
         ),
         body: SingleChildScrollView(
           child: Padding(
@@ -34,19 +37,15 @@ class _HomePageState extends State<HomePage> {
                 children: [
                   Padding(
                     padding: EdgeInsets.all(8.0),
-                    child: Image.network(
-                        "https://media.licdn.com/dms/image/C4E0BAQFggMnGBYkS7g/company-logo_200_200/0/1653325300516?e=2147483647&v=beta&t=_zLBo-tnW_HI5KVfZ-vPMSTinr3ekugliyDOViJul6U",
-                        width: 200, loadingBuilder: (BuildContext context,
-                            Widget child, ImageChunkEvent? loadingProgress) {
-                      if (loadingProgress == null) return child;
-                      return Center(
-                          child: CircularProgressIndicator(
-                        value: loadingProgress.expectedTotalBytes != null
-                            ? loadingProgress.cumulativeBytesLoaded /
-                                loadingProgress.expectedTotalBytes!
-                            : null,
-                      ));
-                    }),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(width: 2, color: Colors.grey),
+                      ),
+                      child: Image.asset(
+                        "assets/images/arus.jpg",
+                        width: 150,
+                      ),
+                    ),
                   ),
                   SizedBox(
                     height: 20,
@@ -68,9 +67,31 @@ class _HomePageState extends State<HomePage> {
                     height: 15,
                   ),
                   TextFormField(
+                    inputFormatters: [
+                      FilteringTextInputFormatter.digitsOnly,
+                      DataInputFormatter(),
+                    ],
+                    validator: (text) {
+                      if (text == null || text.isEmpty) {
+                        return "Digite o Data";
+                      }
+                      return null;
+                    },
+                    controller: _dataController,
+                    decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: "Data de Nascimento",
+                        prefixIcon: Icon(Icons.view_timeline_outlined)),
+                  ),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  TextFormField(
                     validator: (text) {
                       if (text == null || text.isEmpty) {
                         return "Digite o Email";
+                      } else if (EmailValidator.validate(text) == false) {
+                        return "Digite um email válido";
                       }
                       return null;
                     },
@@ -84,9 +105,20 @@ class _HomePageState extends State<HomePage> {
                     height: 15,
                   ),
                   TextFormField(
+                    inputFormatters: [
+                      FilteringTextInputFormatter.digitsOnly,
+                      CpfInputFormatter(),
+                    ],
                     validator: (text) {
+                      // final RegExp numberRegExp =
+                      //     RegExp(r'^\d{3}\x2E\d{3}\x2E\d{3}\x2D\d{2}$');
+                      // bool isCpf = numberRegExp.hasMatch(text!);
+                      bool isCpf = CPFValidator.isValid(text);
+
                       if (text == null || text.isEmpty) {
                         return "Digite o CPF";
+                      } else if (isCpf == false) {
+                        return "Digite um cpf válido";
                       }
                       return null;
                     },
@@ -101,7 +133,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                   ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.redAccent,
+                          backgroundColor: Colors.black12,
                           padding: EdgeInsets.symmetric(
                               horizontal: 70, vertical: 20)),
                       onPressed: () {
@@ -110,7 +142,8 @@ class _HomePageState extends State<HomePage> {
                             {
                               "nome": _nomeController.text,
                               "email": _emailController.text,
-                              "cpf": _cpfController.text
+                              "cpf": _cpfController.text,
+                              "data": _dataController.text
                             }
                           ];
                           Navigator.push(
