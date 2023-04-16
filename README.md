@@ -1,6 +1,6 @@
 # App aurus_printer
 
-A new Flutter project.
+Um app que faz integração com dispositivos blutooth, como PDA, impressoras térmica, celulares, e ao colocar dados é possivel pesquisar dispositivos próximos e coloca-los para imprimir.
 
 ## Getting Started
 
