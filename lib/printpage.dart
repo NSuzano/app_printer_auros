@@ -36,7 +36,7 @@ class _PrintPageState extends State<PrintPage> {
 
       if (_devices.isEmpty)
         setState(() {
-          deviceMsg = "No Devices";
+          deviceMsg = "Sem Dispositivo";
         });
     });
   }
@@ -45,7 +45,7 @@ class _PrintPageState extends State<PrintPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Selecione o equipamento"),
+        title: Text("Selecione o dispositivo"),
         backgroundColor: Colors.redAccent,
       ),
       body: _devices.isEmpty
@@ -76,6 +76,16 @@ class _PrintPageState extends State<PrintPage> {
       List<LineText> list = [];
 
       list.add(LineText(
+          type: LineText.TYPE_IMAGE,
+          content:
+              'https://media.licdn.com/dms/image/C4E0BAQFggMnGBYkS7g/company-logo_200_200/0/1653325300516?e=2147483647&v=beta&t=_zLBo-tnW_HI5KVfZ-vPMSTinr3ekugliyDOViJul6U',
+          weight: 2,
+          width: 2,
+          height: 2,
+          align: LineText.ALIGN_CENTER,
+          linefeed: 1));
+
+      list.add(LineText(
           type: LineText.TYPE_TEXT,
           content: 'Print Auros User',
           weight: 2,
@@ -88,22 +98,24 @@ class _PrintPageState extends State<PrintPage> {
           type: LineText.TYPE_TEXT,
           content: widget.data[0]['nome'],
           weight: 0,
-          align: LineText.ALIGN_CENTER,
+          align: LineText.ALIGN_LEFT,
           linefeed: 1));
 
       list.add(LineText(
           type: LineText.TYPE_TEXT,
           content: widget.data[0]['email'],
           weight: 0,
-          align: LineText.ALIGN_CENTER,
+          align: LineText.ALIGN_LEFT,
           linefeed: 1));
 
       list.add(LineText(
           type: LineText.TYPE_TEXT,
           content: widget.data[0]['cpf'],
           weight: 0,
-          align: LineText.ALIGN_CENTER,
+          align: LineText.ALIGN_LEFT,
           linefeed: 1));
+
+      await blutoothPrint.printReceipt(config, list);
     }
   }
 }
