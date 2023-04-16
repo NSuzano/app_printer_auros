@@ -37,6 +37,8 @@ dependencies:
   cupertino_icons: ^1.0.2
   intl: ^0.18.0
   bluetooth_print: ^4.3.0
+  cpf_cnpj_validator: ^2.0.0
+  brasil_fields: ^1.11.0
 
 dev_dependencies:
   flutter_test:
